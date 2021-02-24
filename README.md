@@ -1,2 +1,2 @@
 # TimSort-C
-This repository provide an implementation of TimSort in C Language
+This repository provide an implementation of TimSort using C Language
