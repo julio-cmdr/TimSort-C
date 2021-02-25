@@ -3,6 +3,7 @@
 */
 #include <stdbool.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <math.h>
 
 typedef struct run{
@@ -19,4 +20,4 @@ void reverse_vector(int *vector, int length);
 
 int count_run(int *vector, int length);
 
-void timSort(int *vector, int length);
+Runs timSort(int *vector, int length);

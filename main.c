@@ -6,14 +6,20 @@
 #include "headers/merge.h"
 #include "headers/tim.h"
 
+void printRun(Run run){
+	for (int i = 0; i < run.length; i++){
+		printf("%d ", run.vector[i]);
+	}
+	printf("\n");
+}
 
 int main(int argc, char **argv){
-	int length = 10;
+	int length = 100;
 	srand(time(NULL));  
 
 	int *vector = (int*)malloc(sizeof(int)*length);
-	for (int i = 0; i< length; i++){
-		vector[i] = rand() % 50;
+	for (int i = 0; i < length; i++){
+		vector[i] = rand() % length;
 		printf("%d ", vector[i]);
 	}
 	printf("\n\n");
@@ -21,10 +27,10 @@ int main(int argc, char **argv){
 	//inserction(vector, length);
 	//mergeSort(vector, 0, length);
 
-	printf("%d\n\n", count_run(vector, length));
+	Runs runs = timSort(vector, length);
 
-	for (int i = 0; i< length; i++){
-		printf("%d ", vector[i]);
+	for (int i = 0; i < runs.n_runs; i++){
+		printRun(runs.runs[i]);
 	}
 	printf("\n\n");
 

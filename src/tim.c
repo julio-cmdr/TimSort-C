@@ -1,11 +1,12 @@
 #include "../headers/tim.h"
+#include "../headers/inserction.h"
 
 int getMinrun(int n){
     int r = 0;
 
     while (n >= 64) {
-        r = (r | n) & 1;
-        n++;
+        r |= n & 1;
+        n >>= 1;
     }
 
     return n + r;
@@ -47,9 +48,11 @@ int count_run(int *vector, int length){
     return n;
 }
 
-void timSort(int *vector, int length){
+Runs timSort(int *vector, int length){
     int n, n_remaining = length;
     int minRun = getMinrun(length);
+
+    printf("\nMinRun: %d\n", minRun);
     
     // allocating a vector of runs
     Runs runs;
@@ -61,12 +64,22 @@ void timSort(int *vector, int length){
         Run tmp_run;
         tmp_run.vector = vector + length - n_remaining;
         
-        n = count_run(tmp_run.vector, n_remaining);
+        tmp_run.length = count_run(tmp_run.vector, n_remaining);
 
-        //verificar aqui a relação de n com minRun e length
+        if(tmp_run.length < minRun){
+            if(minRun <= n_remaining)
+                tmp_run.length = minRun;
+            else
+                tmp_run.length = n_remaining;
+        }
+
+        n_remaining -= tmp_run.length;
+
+        inserction(tmp_run.vector, tmp_run.length);
 
         runs.runs[runs.n_runs] = tmp_run;
         runs.n_runs++;
     }
 
+    return runs;
 }
