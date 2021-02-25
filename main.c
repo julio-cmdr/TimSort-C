@@ -4,6 +4,7 @@
 
 #include "headers/inserction.h"
 #include "headers/merge.h"
+#include "headers/tim.h"
 
 
 int main(int argc, char **argv){
@@ -18,7 +19,9 @@ int main(int argc, char **argv){
 	printf("\n\n");
 
 	//inserction(vector, length);
-	mergeSort(vector, 0, length);
+	//mergeSort(vector, 0, length);
+
+	printf("%d\n\n", count_run(vector, length));
 
 	for (int i = 0; i< length; i++){
 		printf("%d ", vector[i]);
