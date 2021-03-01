@@ -9,6 +9,8 @@
 typedef struct run{
     int *vector;
     int length;
+    // this atribute indicates if the run has ever been merged
+    bool isMerged;
 }Run;
 
 typedef struct runs{
@@ -20,4 +22,4 @@ void reverse_vector(int *vector, int length);
 
 int count_run(int *vector, int length);
 
-Runs timSort(int *vector, int length);
+void timSort(int **vector, int length);

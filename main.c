@@ -1,16 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-
+#include <string.h>
 #include "headers/inserction.h"
 #include "headers/merge.h"
 #include "headers/tim.h"
 
-void printRun(Run run){
-	for (int i = 0; i < run.length; i++){
-		printf("%d ", run.vector[i]);
-	}
-	printf("\n");
+void printVector(int *vector, int length){
+    for(int i = 0; i < length; i++){
+        printf("%d ", vector[i]);
+    }
+    printf("\n");
 }
 
 int main(int argc, char **argv){
@@ -24,15 +24,19 @@ int main(int argc, char **argv){
 	}
 	printf("\n\n");
 
-	//inserction(vector, length);
-	//mergeSort(vector, 0, length);
+	int *vector2 = (int*)malloc(sizeof(int)*length);
+	
+	memcpy(vector2, vector, sizeof(int)*length);
+	inserction(vector2, length);
+	printf("Inserction\n");
+	printVector(vector2, length);
 
-	Runs runs = timSort(vector, length);
+	memcpy(vector2, vector, sizeof(int)*length);
+	mergeSort(&vector2, length);
+	printf("\nMerge\n");
+	printVector(vector2, length);
 
-	for (int i = 0; i < runs.n_runs; i++){
-		printRun(runs.runs[i]);
-	}
-	printf("\n\n");
-
-	return 0;
+	timSort(&vector, length);
+	printf("\nTim\n");
+	printVector(vector, length);
 }

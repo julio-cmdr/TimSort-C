@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void merge(int *vector, int begin, int half, int end);
+int *merge(int *vector1, int begin1, int end1, int *vector2, int begin2, int end2);
 
-void mergeSort(int *vector, int begin, int end);
+void mergeSort(int **vector, int length);
