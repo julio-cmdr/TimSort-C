@@ -27,7 +27,7 @@ int main(int argc, char **argv){
 	int *vector2 = (int*)malloc(sizeof(int)*length);
 	
 	memcpy(vector2, vector, sizeof(int)*length);
-	inserction(vector2, length);
+	binary_inserction(vector2, length);
 	printf("Inserction\n");
 	printVector(vector2, length);
 
