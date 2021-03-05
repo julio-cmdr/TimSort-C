@@ -31,7 +31,7 @@ int *merge(int *vector1, int begin1, int end1, int *vector2, int begin2, int end
 void mergeSort_aux(int *V, int begin, int end){
 	int half;
 	if(begin<end){
-		half = (int)((begin+end)/2)
+		half = (int)((begin+end)/2);
 		mergeSort_aux(V, begin, half);
 		mergeSort_aux(V, half+1, end);
 		

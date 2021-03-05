@@ -110,22 +110,21 @@ void timSort(int **vector, int length){
 
     while(runs.n_runs > 1){
         if(runs.n_runs > 2){
-            if(runs.runs[0].length > (runs.runs[1].length + runs.runs[2].length)){
-                if(runs.runs[1].length >= runs.runs[2].length){
-                    runs.runs[0] = merge_(runs.runs[0], runs.runs[1]);
+            if(runs.runs[0].length > (runs.runs[1].length + runs.runs[2].length) && 
+                runs.runs[1].length > runs.runs[2].length) {
+                
+                runs.runs[0] = merge_(runs.runs[0], runs.runs[1]);
                     
-                    runs.runs[1] = runs.runs[runs.n_runs - 1];
-                } else {
-                    runs.runs[0] = merge_(runs.runs[0], runs.runs[2]);
-                    
-                    if(runs.n_runs > 3)
-                        runs.runs[2] = runs.runs[runs.n_runs - 1];
-                }
+                //runs.runs[1] = runs.runs[runs.n_runs - 1];
+
+                memmove(runs.runs + 1, runs.runs + 2, (runs.n_runs-1)*sizeof(Run));
+                
             } else {
                 runs.runs[1] = merge_(runs.runs[1], runs.runs[2]);
                 
                 if(runs.n_runs > 3)
-                    runs.runs[2] = runs.runs[runs.n_runs - 1];
+                    memmove(runs.runs + 2, runs.runs + 3, (runs.n_runs-1)*sizeof(Run));
+                    //runs.runs[2] = runs.runs[runs.n_runs - 1];
             }
         }else{
             runs.runs[0] = merge_(runs.runs[0], runs.runs[1]);
