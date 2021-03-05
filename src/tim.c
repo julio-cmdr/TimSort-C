@@ -49,30 +49,7 @@ int count_run(int *vector, int length){
     return n;
 }
 
-Run merge_(Run a, Run b){
-    int *tmp = (int*)malloc(sizeof(int)*(a.length + b.length));
-
-    // vector1, begin1, end1, vector2, begin2, end2
-    tmp = merge(a.vector, 0, a.length-1, b.vector, 0, b.length-1);
-    
-    // if the run has never been merged then it just makes reference to then main vector
-    // and we can't free it now
-    if(a.isMerged){
-        free(a.vector);
-    }
-    if(b.isMerged){
-        free(b.vector);
-    }
-
-    a.vector = tmp;
-    a.length = a.length + b.length;
-    a.isMerged = true;
-    
-    return a;
-}
-
-
-void timSort(int **vector, int length){
+void timSort(int *vector, int length){
     int n, n_remaining = length;
     int minRun = getMinrun(length);
 
@@ -86,7 +63,7 @@ void timSort(int **vector, int length){
 
     while(n_remaining > 0){
         Run tmp_run;
-        tmp_run.vector = *vector + length - n_remaining;
+        tmp_run.vector = vector + length - n_remaining;
         tmp_run.isMerged = false;
         
         tmp_run.length = count_run(tmp_run.vector, n_remaining);
@@ -113,32 +90,36 @@ void timSort(int **vector, int length){
             if(runs.runs[0].length > (runs.runs[1].length + runs.runs[2].length) && 
                 runs.runs[1].length > runs.runs[2].length) {
                 
-                runs.runs[0] = merge_(runs.runs[0], runs.runs[1]);
+                // merge run0 and run1
+                merge(runs.runs[0].vector, 0, runs.runs[0].length, runs.runs[0].length + runs.runs[1].length-1);    
+                runs.runs[0].length = runs.runs[0].length + runs.runs[1].length;
                     
-                //runs.runs[1] = runs.runs[runs.n_runs - 1];
-
+                // remove run1 from the vector
                 memmove(runs.runs + 1, runs.runs + 2, (runs.n_runs-1)*sizeof(Run));
                 
             } else {
-                runs.runs[1] = merge_(runs.runs[1], runs.runs[2]);
+                // merge run1 and run2
+                merge(runs.runs[1].vector, 0, runs.runs[1].length, runs.runs[1].length + runs.runs[2].length-1);    
+                runs.runs[1].length = runs.runs[1].length + runs.runs[2].length;
                 
-                if(runs.n_runs > 3)
+                if(runs.n_runs > 3){
+                    // remove run2 from the vector
                     memmove(runs.runs + 2, runs.runs + 3, (runs.n_runs-1)*sizeof(Run));
-                    //runs.runs[2] = runs.runs[runs.n_runs - 1];
+                }
+
             }
         }else{
-            runs.runs[0] = merge_(runs.runs[0], runs.runs[1]);
+            // merge run0 and run1
+            merge(runs.runs[0].vector, 0, runs.runs[0].length, runs.runs[0].length + runs.runs[1].length-1);    
+            runs.runs[0].length = runs.runs[0].length + runs.runs[1].length;
         }
 
         runs.n_runs--;
     }
 
-    if(runs.runs[0].isMerged){
-        free(*vector);
-        *vector = runs.runs[0].vector;
-    }
-
     if(length != runs.runs[0].length){
         printf("TimSort Error %d %d\n", length, runs.runs[0].length);
     }
+
+    free(runs.runs);
 }

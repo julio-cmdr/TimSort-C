@@ -22,4 +22,4 @@ void reverse_vector(int *vector, int length);
 
 int count_run(int *vector, int length);
 
-void timSort(int **vector, int length);
+void timSort(int *vector, int length);

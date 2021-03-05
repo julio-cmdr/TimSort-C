@@ -39,7 +39,6 @@ void binary_inserction(int *vector, int length){
 
 		index = binarySearch(vector, aux, 0, i-1);
 
-		printf("index %d\n", index);
 		// move all elements from index to i one position right 
 		memmove(vector + index + 1, vector + index, (i-index)*sizeof(int));
 				

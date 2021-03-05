@@ -28,15 +28,15 @@ int main(int argc, char **argv){
 	
 	memcpy(vector2, vector, sizeof(int)*length);
 	binary_inserction(vector2, length);
-	printf("Inserction\n");
+	printf("Binary Inserction\n");
 	printVector(vector2, length);
 
 	memcpy(vector2, vector, sizeof(int)*length);
-	mergeSort(&vector2, length);
+	mergeSort(vector2, 0, length-1);
 	printf("\nMerge\n");
 	printVector(vector2, length);
 
-	timSort(&vector, length);
+	timSort(vector, length);
 	printf("\nTim\n");
 	printVector(vector, length);
 }

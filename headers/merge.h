@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-int *merge(int *vector1, int begin1, int end1, int *vector2, int begin2, int end2);
+void merge(int *vector, int begin1, int begin2, int end);
 
-void mergeSort(int **vector, int length);
+void mergeSort(int *V, int begin, int end);
+
