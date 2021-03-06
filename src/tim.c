@@ -64,7 +64,6 @@ void timSort(int *vector, int length){
     while(n_remaining > 0){
         Run tmp_run;
         tmp_run.vector = vector + length - n_remaining;
-        tmp_run.isMerged = false;
         
         tmp_run.length = count_run(tmp_run.vector, n_remaining);
 

@@ -39,4 +39,7 @@ int main(int argc, char **argv){
 	timSort(vector, length);
 	printf("\nTim\n");
 	printVector(vector, length);
+
+	free(vector);
+	free(vector2);
 }
