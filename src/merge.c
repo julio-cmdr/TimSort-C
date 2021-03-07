@@ -1,6 +1,8 @@
 #include "../headers/merge.h"
 #include "../headers/utils.h"
 
+#define MIN_GALOPE 7
+
 // only for consecutive vectors
 void merge(int *vector, int begin1, int begin2, int end){
 	int p1 = begin1;
@@ -67,6 +69,10 @@ void optimized_merge(int *vector, int begin1, int begin2, int end){
 
 	int count1 = 0;
 	int count2 = 0;
+	int galope1 = 1;
+	int galope2 = 1;
+	int last_p1, last_p2;
+	int min_galope = MIN_GALOPE;
 
 	if(temp != NULL){
 		if(rightward){
@@ -74,16 +80,81 @@ void optimized_merge(int *vector, int begin1, int begin2, int end){
 
 			p1 = 0;
 			p2 = begin2;
+			last_p1 = p1-1;
+			last_p2 = p2-1;
 
-			for(int i = begin1; (i < end+1) && (p1 < begin2-begin1); i++){
+			int i = begin1;
+			while(p1 < begin2-begin1){
+
 				if(p2 <= end && temp[p1] >= vector[p2]){
-					vector[i] = vector[p2++];
-					count2++;
 					count1 = 0;
+					// checks if p1 is galloping
+					if(galope1 > 1){
+						p1 = binarySearch(temp, vector[p2], last_p1 + 1, p1);
+						
+						if(p1-1 - last_p1 > 0){
+							memcpy(vector + i, temp + last_p1 + 1, (p1 - last_p1 - 1)*sizeof(int));
+							i += p1 - last_p1 - 1;
+						}
+
+						last_p1 = p1 - 1;
+						galope1 = 1;
+
+					} else {
+
+						count2++;
+						
+						memmove(vector + i, vector + last_p2 + 1, (p2 - last_p2)*sizeof(int));
+						i += p2 - last_p2;							
+						
+						if(count2 > min_galope && galope2 > 0){						
+							if(p2 + 2*galope2 <= end){
+								galope2 = galope2*2;
+							} else {
+								galope2 = end - p2;
+							}
+						} else {
+							galope2 = 1;
+						}
+						
+						last_p2 = p2;
+						p2 += galope2;
+					}
+
 				}else{
-					vector[i] = temp[p1++];
-					count1++;
 					count2 = 0;
+					// checks if p2 is galloping
+					if(galope2 > 1){
+						p2 = binarySearch(vector, vector[p1], last_p2 + 1, p2);
+
+						if(p2 - 1 - last_p2 > 0){
+							memmove(vector + i, vector + last_p2 + 1, (p2 - last_p2 - 1)*sizeof(int));
+							i += p2 - last_p2 - 1;
+						}
+						
+						last_p2 = p2 - 1;
+						galope2 = 1;
+						
+					} else {
+
+						count1++;
+
+						memcpy(vector + i, temp + last_p1 + 1, (p1 - last_p1)*sizeof(int));
+						i += p1 - last_p1;
+
+						if(count1 > min_galope && galope1 > 0){						
+							if(p1 + 2*galope1 <= begin2-begin1-1){
+								galope1 = galope1*2;							
+							} else {
+								galope1 = begin2-begin1-1 - p1;
+							}
+						} else {
+							galope1 = 1;
+						}
+						
+						last_p1 = p1;
+						p1 += galope1;
+					}
 				}
 			}
 

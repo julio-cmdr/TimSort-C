@@ -1,5 +1,19 @@
 #include "../headers/utils.h"
 
+void printVector(int *vector, int length){
+    for(int i = 0; i < length; i++){
+        printf("%d ", vector[i]);
+    }
+    printf("\n");
+}
+
+int min(int a, int b){
+    if(a <= b){
+        return a;
+    }
+    return b;
+}
+
 int binarySearch(int *vector, int item, int begin, int end){
 
     if (end <= begin){

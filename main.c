@@ -5,13 +5,8 @@
 #include "headers/inserction.h"
 #include "headers/merge.h"
 #include "headers/tim.h"
+#include "headers/utils.h"
 
-void printVector(int *vector, int length){
-    for(int i = 0; i < length; i++){
-        printf("%d ", vector[i]);
-    }
-    printf("\n");
-}
 
 int main(int argc, char **argv){
 	int length = 100;
