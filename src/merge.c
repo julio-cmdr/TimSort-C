@@ -65,6 +65,9 @@ void optimized_merge(int *vector, int begin1, int begin2, int end){
 		rightward = false;
 	}
 
+	int count1 = 0;
+	int count2 = 0;
+
 	if(temp != NULL){
 		if(rightward){
 			// merge the vectors from left to right
@@ -72,20 +75,15 @@ void optimized_merge(int *vector, int begin1, int begin2, int end){
 			p1 = 0;
 			p2 = begin2;
 
-			for(int i = begin1; i < end+1; i++){
-				if(p1 < begin2-begin1 && p2 <= end){
-
-					if(temp[p1] < vector[p2])
-						vector[i] = temp[p1++];
-					else
-						vector[i] = vector[p2++];
-					
+			for(int i = begin1; (i < end+1) && (p1 < begin2-begin1); i++){
+				if(p2 <= end && temp[p1] >= vector[p2]){
+					vector[i] = vector[p2++];
+					count2++;
+					count1 = 0;
 				}else{
-
-					if(p1 < begin2-begin1)
-						vector[i] = temp[p1++];
-					else
-						vector[i] = vector[p2++];
+					vector[i] = temp[p1++];
+					count1++;
+					count2 = 0;
 				}
 			}
 
@@ -95,20 +93,15 @@ void optimized_merge(int *vector, int begin1, int begin2, int end){
 			p1 = begin2-1;
 			p2 = end - begin2;
 
-			for(int i = end; i >= begin1; i--){
-				if(p1 >= begin1 && p2 >= 0){
-					// combinar ordenando
-					if(vector[p1] > temp[p2])
-						vector[i] = vector[p1--];
-					else
-						vector[i] = temp[p2--];
-					
+			for(int i = end; i >= begin1 && p2 >= 0; i--){			
+				if(p1 >= begin1 && vector[p1] > temp[p2]){
+					vector[i] = vector[p1--];
+					count1++;
+					count2 = 0;
 				}else{
-					// copia o que sobrou
-					if(p2 >= 0)
-						vector[i] = temp[p2--];
-					else
-						vector[i] = vector[p1--];
+					vector[i] = temp[p2--];
+					count2++;
+					count1 = 0;
 				}
 			}
 		}
