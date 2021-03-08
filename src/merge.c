@@ -1,7 +1,7 @@
 #include "../headers/merge.h"
 #include "../headers/utils.h"
 
-#define MIN_GALLOP 7
+#define INITIAL_MIN_GALLOP 8
 
 // only for consecutive vectors
 void merge(int *vector, int begin1, int begin2, int end){
@@ -38,6 +38,7 @@ void merge(int *vector, int begin1, int begin2, int end){
 	This merge function run two binary searches before starting the merge.
 	It only copies a part of the vector, being a middle term between in-place and not in-place.
 	It also uses the Galloping mode during merge.
+	Only for consecutive vectors.
 */
 void optimized_merge(int *vector, int begin1, int begin2, int end){
 	// ---------- redefines begin1 and end based on binary search
@@ -53,7 +54,7 @@ void optimized_merge(int *vector, int begin1, int begin2, int end){
 
 	// checks which vector is smaller and which will be copied to temp
 	
-	if(begin2 - begin1 < end + 1 - begin2){ // --------------------------------------- voltar para <=
+	if(begin2 - begin1 <= end + 1 - begin2){
 		// copies a part of vector1 to temp		
 		temp = (int*)malloc((begin2 - begin1)*sizeof(int));
 		memcpy(temp, vector + begin1, (begin2 - begin1)*sizeof(int));
@@ -72,7 +73,7 @@ void optimized_merge(int *vector, int begin1, int begin2, int end){
 	int gallop1 = 1;
 	int gallop2 = 1;
 	int last_p1, last_p2;
-	int min_gallop = MIN_GALLOP;
+	int min_gallop = INITIAL_MIN_GALLOP;
 
 	if(temp != NULL){
 		if(rightward){
@@ -107,14 +108,19 @@ void optimized_merge(int *vector, int begin1, int begin2, int end){
 						memmove(vector + i, vector + last_p2 + 1, (p2 - last_p2)*sizeof(int));
 						i += p2 - last_p2;							
 						
-						if(count2 > min_gallop && gallop2 > 0){						
-							if(p2 + 2*gallop2 <= end){
-								gallop2 = gallop2*2;
+						if(count2 > 1){
+							if(count2 > min_gallop && gallop2 > 0){						
+								if(p2 + 2*gallop2 <= end){
+									gallop2 = gallop2*2;
+								} else {
+									gallop2 = end - p2;
+								}
 							} else {
-								gallop2 = end - p2;
+								gallop2 = 1;
 							}
-						} else {
-							gallop2 = 1;
+							min_gallop--;
+						}else{
+							min_gallop++;
 						}
 						
 						last_p2 = p2;
@@ -142,14 +148,19 @@ void optimized_merge(int *vector, int begin1, int begin2, int end){
 						memcpy(vector + i, temp + last_p1 + 1, (p1 - last_p1)*sizeof(int));
 						i += p1 - last_p1;
 
-						if(count1 > min_gallop && gallop1 > 0){						
-							if(p1 + 2*gallop1 <= begin2-begin1-1){
-								gallop1 = gallop1*2;							
+						if(count1 > 1){
+							if(count1 > min_gallop && gallop1 > 0){						
+								if(p1 + 2*gallop1 <= begin2-begin1-1){
+									gallop1 = gallop1*2;							
+								} else {
+									gallop1 = begin2-begin1-1 - p1;
+								}
 							} else {
-								gallop1 = begin2-begin1-1 - p1;
+								gallop1 = 1;
 							}
-						} else {
-							gallop1 = 1;
+							min_gallop--;
+						}else{
+							min_gallop++;
 						}
 						
 						last_p1 = p1;
@@ -188,14 +199,19 @@ void optimized_merge(int *vector, int begin1, int begin2, int end){
 						i -= last_p1 - p1;
 						memmove(vector + i + 1, vector + p1, (last_p1 - p1)*sizeof(int));
 
-						if(count1 > min_gallop && gallop1 > 0){						
-							if(p1 - 2*gallop1 >= begin1){
-								gallop1 = gallop1*2;							
+						if(count1 > 1){
+							if(count1 > min_gallop && gallop1 > 0){						
+								if(p1 - 2*gallop1 >= begin1){
+									gallop1 = gallop1*2;							
+								} else {
+									gallop1 = p1 - begin1;
+								}
 							} else {
-								gallop1 = p1 - begin1;
+								gallop1 = 1;
 							}
-						} else {
-							gallop1 = 1;
+							min_gallop--;
+						}else{
+							min_gallop++;
 						}
 						
 						last_p1 = p1;
@@ -223,14 +239,19 @@ void optimized_merge(int *vector, int begin1, int begin2, int end){
 						i -= last_p2 - p2;
 						memcpy(vector + i + 1, temp + p2, (last_p2 - p2)*sizeof(int));
 
-						if(count2 > min_gallop && gallop2 > 0){						
-							if(p2 - 2*gallop2 >= 0){
-								gallop2 = gallop2*2;
+						if(count2 > 1){
+							if(count2 > min_gallop && gallop2 > 0){						
+								if(p2 - 2*gallop2 >= 0){
+									gallop2 = gallop2*2;
+								} else {
+									gallop2 = p2;
+								}
 							} else {
-								gallop2 = p2;
+								gallop2 = 1;
 							}
-						} else {
-							gallop2 = 1;
+							min_gallop--;
+						}else{
+							min_gallop++;
 						}
 						
 						last_p2 = p2;
