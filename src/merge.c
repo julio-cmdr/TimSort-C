@@ -1,7 +1,7 @@
 #include "../headers/merge.h"
 #include "../headers/utils.h"
 
-#define MIN_GALOPE 7
+#define MIN_GALLOP 7
 
 // only for consecutive vectors
 void merge(int *vector, int begin1, int begin2, int end){
@@ -53,7 +53,7 @@ void optimized_merge(int *vector, int begin1, int begin2, int end){
 
 	// checks which vector is smaller and which will be copied to temp
 	
-	if(begin2 - begin1 <= end + 1 - begin2){
+	if(begin2 - begin1 < end + 1 - begin2){ // --------------------------------------- voltar para <=
 		// copies a part of vector1 to temp		
 		temp = (int*)malloc((begin2 - begin1)*sizeof(int));
 		memcpy(temp, vector + begin1, (begin2 - begin1)*sizeof(int));
@@ -69,10 +69,10 @@ void optimized_merge(int *vector, int begin1, int begin2, int end){
 
 	int count1 = 0;
 	int count2 = 0;
-	int galope1 = 1;
-	int galope2 = 1;
+	int gallop1 = 1;
+	int gallop2 = 1;
 	int last_p1, last_p2;
-	int min_galope = MIN_GALOPE;
+	int min_gallop = MIN_GALLOP;
 
 	if(temp != NULL){
 		if(rightward){
@@ -89,7 +89,7 @@ void optimized_merge(int *vector, int begin1, int begin2, int end){
 				if(p2 <= end && temp[p1] >= vector[p2]){
 					count1 = 0;
 					// checks if p1 is galloping
-					if(galope1 > 1){
+					if(gallop1 > 1){
 						p1 = binarySearch(temp, vector[p2], last_p1 + 1, p1);
 						
 						if(p1-1 - last_p1 > 0){
@@ -98,7 +98,7 @@ void optimized_merge(int *vector, int begin1, int begin2, int end){
 						}
 
 						last_p1 = p1 - 1;
-						galope1 = 1;
+						gallop1 = 1;
 
 					} else {
 
@@ -107,25 +107,25 @@ void optimized_merge(int *vector, int begin1, int begin2, int end){
 						memmove(vector + i, vector + last_p2 + 1, (p2 - last_p2)*sizeof(int));
 						i += p2 - last_p2;							
 						
-						if(count2 > min_galope && galope2 > 0){						
-							if(p2 + 2*galope2 <= end){
-								galope2 = galope2*2;
+						if(count2 > min_gallop && gallop2 > 0){						
+							if(p2 + 2*gallop2 <= end){
+								gallop2 = gallop2*2;
 							} else {
-								galope2 = end - p2;
+								gallop2 = end - p2;
 							}
 						} else {
-							galope2 = 1;
+							gallop2 = 1;
 						}
 						
 						last_p2 = p2;
-						p2 += galope2;
+						p2 += gallop2;
 					}
 
 				}else{
 					count2 = 0;
 					// checks if p2 is galloping
-					if(galope2 > 1){
-						p2 = binarySearch(vector, vector[p1], last_p2 + 1, p2);
+					if(gallop2 > 1){
+						p2 = binarySearch(vector, temp[p1], last_p2 + 1, p2);
 
 						if(p2 - 1 - last_p2 > 0){
 							memmove(vector + i, vector + last_p2 + 1, (p2 - last_p2 - 1)*sizeof(int));
@@ -133,7 +133,7 @@ void optimized_merge(int *vector, int begin1, int begin2, int end){
 						}
 						
 						last_p2 = p2 - 1;
-						galope2 = 1;
+						gallop2 = 1;
 						
 					} else {
 
@@ -142,18 +142,18 @@ void optimized_merge(int *vector, int begin1, int begin2, int end){
 						memcpy(vector + i, temp + last_p1 + 1, (p1 - last_p1)*sizeof(int));
 						i += p1 - last_p1;
 
-						if(count1 > min_galope && galope1 > 0){						
-							if(p1 + 2*galope1 <= begin2-begin1-1){
-								galope1 = galope1*2;							
+						if(count1 > min_gallop && gallop1 > 0){						
+							if(p1 + 2*gallop1 <= begin2-begin1-1){
+								gallop1 = gallop1*2;							
 							} else {
-								galope1 = begin2-begin1-1 - p1;
+								gallop1 = begin2-begin1-1 - p1;
 							}
 						} else {
-							galope1 = 1;
+							gallop1 = 1;
 						}
 						
 						last_p1 = p1;
-						p1 += galope1;
+						p1 += gallop1;
 					}
 				}
 			}
@@ -163,16 +163,79 @@ void optimized_merge(int *vector, int begin1, int begin2, int end){
 
 			p1 = begin2-1;
 			p2 = end - begin2;
+			last_p1 = p1+1;
+			last_p2 = p2+1;
 
-			for(int i = end; i >= begin1 && p2 >= 0; i--){			
+			int i = end;
+			while(p2 >= 0){			
 				if(p1 >= begin1 && vector[p1] > temp[p2]){
-					vector[i] = vector[p1--];
-					count1++;
 					count2 = 0;
+
+					if(gallop2 > 1){
+						p2 = binarySearch(temp, vector[p1], p2, last_p2 - 1);
+
+						if(last_p2 - p2 > 0){
+							i -= last_p2 - p2;
+							memcpy(vector + i + 1, temp + p2, (last_p2 - p2)*sizeof(int));							
+						}
+
+						last_p2 = p2;
+						p2--;
+						gallop2 = 1;
+
+					}else{
+						count1++;
+						i -= last_p1 - p1;
+						memmove(vector + i + 1, vector + p1, (last_p1 - p1)*sizeof(int));
+
+						if(count1 > min_gallop && gallop1 > 0){						
+							if(p1 - 2*gallop1 >= begin1){
+								gallop1 = gallop1*2;							
+							} else {
+								gallop1 = p1 - begin1;
+							}
+						} else {
+							gallop1 = 1;
+						}
+						
+						last_p1 = p1;
+						p1 -= gallop1;
+					}
+					
 				}else{
-					vector[i] = temp[p2--];
-					count2++;
 					count1 = 0;
+
+					if(gallop1 > 1){
+						p1 = binarySearch(vector, temp[p2], p1, last_p1 - 1);
+
+						if(last_p1 - p1 > 0){
+							i -= last_p1 - p1;
+							memmove(vector + i + 1, vector + p1, (last_p1 - p1)*sizeof(int));
+						}
+
+						last_p1 = p1;
+						p1--;
+						gallop1 = 1;
+
+					} else {
+						count2++;
+
+						i -= last_p2 - p2;
+						memcpy(vector + i + 1, temp + p2, (last_p2 - p2)*sizeof(int));
+
+						if(count2 > min_gallop && gallop2 > 0){						
+							if(p2 - 2*gallop2 >= 0){
+								gallop2 = gallop2*2;
+							} else {
+								gallop2 = p2;
+							}
+						} else {
+							gallop2 = 1;
+						}
+						
+						last_p2 = p2;
+						p2 -= gallop2;
+					}				
 				}
 			}
 		}
