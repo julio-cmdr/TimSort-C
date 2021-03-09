@@ -16,13 +16,15 @@ void binary_inserction(int *vector, int length){
 	int j, aux, index;
 
 	for(int i = 1; i < length; i++){
-		aux = vector[i];
+		if(vector[i-1] > vector[i]){
+			aux = vector[i];
+			
+			index = binarySearch(vector, aux, 0, i-1);
 
-		index = binarySearch(vector, aux, 0, i-1);
-
-		// move all elements from index to i one position right 
-		memmove(vector + index + 1, vector + index, (i-index)*sizeof(int));
-				
-		vector[index] = aux;
+			// move all elements from index to i one position right 
+			memmove(vector + index + 1, vector + index, (i-index)*sizeof(int));
+					
+			vector[index] = aux;
+		}
 	}
 }
