@@ -65,16 +65,20 @@ void timSort(int *vector, int length){
         
         tmp_run.length = count_run(tmp_run.vector, n_remaining);
 
-        if(tmp_run.length < minRun){
-            if(minRun <= n_remaining)
-                tmp_run.length = minRun;
-            else
-                tmp_run.length = n_remaining;
+        // if the vector is already sorted it doesn't need to perform binary insertion
+        if(tmp_run.length != length){
+
+            if(tmp_run.length < minRun){
+                if(minRun <= n_remaining)
+                    tmp_run.length = minRun;
+                else
+                    tmp_run.length = n_remaining;
+            }
+        
+            binary_inserction(tmp_run.vector, tmp_run.length);
         }
 
         n_remaining -= tmp_run.length;
-
-        inserction(tmp_run.vector, tmp_run.length);
 
         runs.runs[runs.n_runs] = tmp_run;
         runs.n_runs++;
