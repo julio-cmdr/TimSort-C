@@ -13,13 +13,11 @@ int main(int argc, char **argv){
 	srand(time(NULL));  
 
 	int *vector = (int*)malloc(sizeof(int)*length);
-	for (int i = 0; i < length; i++){
-		vector[i] = rand() % length;
-		printf("%d ", vector[i]);
-	}
+	generateVector(vector, length, RANDOM);
+	printVector(vector, length);
 	printf("\n\n");
 
-	timSort(vector, length);
+	timSort(vector, length, optimized_merge, binary_inserction);
 	printf("\nTim\n");
 	printVector(vector, length);
 

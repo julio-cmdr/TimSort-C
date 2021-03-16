@@ -16,7 +16,7 @@ void binary_inserction(int *vector, int length){
 	int j, aux, index;
 
 	for(int i = 1; i < length; i++){
-		if(vector[i-1] > vector[i]){
+		if(vector[i-1] > vector[i]){		
 			aux = vector[i];
 			
 			index = binarySearch(vector, aux, 0, i-1);

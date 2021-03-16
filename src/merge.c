@@ -265,12 +265,12 @@ void optimized_merge(int *vector, int begin1, int begin2, int end){
 	free(temp);
 }
 
-void mergeSort(int *V, int begin, int end){
+void mergeSort(int *V, int begin, int end, void (*_merge)(int*,int,int,int)){
 	int half;
 	if(begin<end){
 		half = (int)((begin+end)/2);
-		mergeSort(V, begin, half);
-		mergeSort(V, half+1, end);
-		optimized_merge(V, begin, half+1, end);
+		mergeSort(V, begin, half, _merge);
+		mergeSort(V, half+1, end, _merge);
+		_merge(V, begin, half+1, end);
 	}
 }

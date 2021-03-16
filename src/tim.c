@@ -49,7 +49,7 @@ int count_run(int *vector, int length){
     return n;
 }
 
-void timSort(int *vector, int length){
+void timSort(int *vector, int length, void (*_merge)(int*,int,int,int), void (*_inserction)(int*,int)){
     int n, n_remaining = length;
     int minRun = getMinrun(length);
  
@@ -75,7 +75,7 @@ void timSort(int *vector, int length){
                     tmp_run.length = n_remaining;
             }
         
-            binary_inserction(tmp_run.vector, tmp_run.length);
+            _inserction(tmp_run.vector, tmp_run.length);
         }
 
         n_remaining -= tmp_run.length;
@@ -86,32 +86,37 @@ void timSort(int *vector, int length){
     
     int removedRun;
 
+    Run *aux_pointer = runs.runs;
+
     while(runs.n_runs > 1){
         if(runs.n_runs > 2){
             if(runs.runs[0].length > (runs.runs[1].length + runs.runs[2].length) && 
                 runs.runs[1].length > runs.runs[2].length) {
                 
                 // merge run0 and run1
-                optimized_merge(runs.runs[0].vector, 0, runs.runs[0].length, runs.runs[0].length + runs.runs[1].length-1);    
+                _merge(runs.runs[0].vector, 0, runs.runs[0].length, runs.runs[0].length + runs.runs[1].length-1);    
                 runs.runs[0].length = runs.runs[0].length + runs.runs[1].length;
                     
                 // remove run1 from the vector
-                memmove(runs.runs + 1, runs.runs + 2, (runs.n_runs-2)*sizeof(Run));
+                runs.runs[1] = runs.runs[0];
+                runs.runs += 1;
                 
             } else {
                 // merge run1 and run2
-                optimized_merge(runs.runs[1].vector, 0, runs.runs[1].length, runs.runs[1].length + runs.runs[2].length-1);    
+                _merge(runs.runs[1].vector, 0, runs.runs[1].length, runs.runs[1].length + runs.runs[2].length-1);    
                 runs.runs[1].length = runs.runs[1].length + runs.runs[2].length;
                 
                 if(runs.n_runs > 3){
                     // remove run2 from the vector
-                    memmove(runs.runs + 2, runs.runs + 3, (runs.n_runs-3)*sizeof(Run));
+                    runs.runs[2] = runs.runs[1];
+                    runs.runs[1] = runs.runs[0];
+                    runs.runs += 1;
                 }
 
             }
         }else{
             // merge run0 and run1
-            optimized_merge(runs.runs[0].vector, 0, runs.runs[0].length, runs.runs[0].length + runs.runs[1].length-1);    
+            _merge(runs.runs[0].vector, 0, runs.runs[0].length, runs.runs[0].length + runs.runs[1].length-1);    
             runs.runs[0].length = runs.runs[0].length + runs.runs[1].length;
         }
 
@@ -122,5 +127,5 @@ void timSort(int *vector, int length){
         printf("TimSort Error %d %d\n", length, runs.runs[0].length);
     }
 
-    free(runs.runs);
+    free(aux_pointer);
 }

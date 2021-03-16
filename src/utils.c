@@ -7,11 +7,28 @@ void printVector(int *vector, int length){
     printf("\n");
 }
 
-int min(int a, int b){
-    if(a <= b){
-        return a;
-    }
-    return b;
+void generateVector(int *vector, int length, int mode){
+	switch(mode){
+		case RANDOM:
+			for (int i = 0; i < length; i++){
+				vector[i] = rand() % (length*2);
+			}
+		break;
+
+		case ASCENDING:
+			vector[0] = rand() % 3;
+			for (int i = 1; i < length; i++){
+				vector[i] = vector[i-1] + rand() % 4;
+			}
+		break;
+
+		case DESCENDING:
+			vector[0] = 3*length;
+			for (int i = 1; i < length; i++){
+				vector[i] = vector[i-1] - rand() % 4;
+			}
+		break;
+	}
 }
 
 int binarySearch(int *vector, int item, int begin, int end){

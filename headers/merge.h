@@ -7,5 +7,5 @@ void merge(int *vector, int begin1, int begin2, int end);
 
 void optimized_merge(int *vector, int begin1, int begin2, int end);
 
-void mergeSort(int *V, int begin, int end);
+void mergeSort(int *V, int begin, int end, void (*_merge)(int*,int,int,int));
 

@@ -16,8 +16,9 @@ typedef struct runs{
     int n_runs;
 }Runs;
 
+
 void reverse_vector(int *vector, int length);
 
 int count_run(int *vector, int length);
 
-void timSort(int *vector, int length);
+void timSort(int *vector, int length, void (*_merge)(int*,int,int,int), void (*_inserction)(int*,int));
